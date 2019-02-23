@@ -1,0 +1,51 @@
+
+const int buttonPin = 4;         // the number of the pushbutton pin
+const int ledPinBlue   =  13;    // the number of the BLUE LED pin
+const int ledPinRed    =  15;    // the number of the RED LED pin
+const int ledPinGreen  =  12;    // the number of the GREEN LED pin
+
+int buttonState = 0;         // variable for reading the pushbutton status
+int LDR = 0;                 // variable for reading the LDR / Photoresistor
+
+void setup() {
+  // initialize the LED pins as an output:
+  pinMode(ledPinBlue, OUTPUT);
+  pinMode(ledPinRed, OUTPUT);
+  pinMode(ledPinGreen, OUTPUT);
+  // initialize the pushbutton pin as an input:
+  pinMode(buttonPin, INPUT);
+
+
+  /********************************************
+   * We are making the Green led flash on boot
+   ********************************************/
+  // Slowly turn up the brightness of the green LED 
+  for(int brightness = 0; brightness <= 1023; brightness++){
+    analogWrite(ledPinGreen, brightness);
+    delay(2);
+  }
+  // Slowly turn down the brightness of the green LED 
+  for(int brightness = 1023; brightness >= 0; brightness--){
+    analogWrite(ledPinGreen, brightness);
+    delay(2);
+  }
+  
+  
+}
+
+void loop() {
+  // read the state of the pushbutton value:
+  buttonState = digitalRead(buttonPin);
+
+  // check if the pushbutton is pressed
+  if (buttonState == LOW) { // LOW since it is tied to GND
+    digitalWrite(ledPinBlue, HIGH); // turn on the Blue LED
+    analogWrite(ledPinRed, 0);      // turn off the Red LED
+  } else {
+    // turn LED off:
+    digitalWrite(ledPinBlue, LOW);  // turn off the Blue LED
+    LDR = analogRead(A0);        // Read the LDR value, bighter room = higher LDR value
+    analogWrite(ledPinRed, LDR); // Red LED is on but matching the LDR, less light = dim LED 
+  }
+
+}
